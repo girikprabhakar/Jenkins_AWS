@@ -1,0 +1,54 @@
+ create AWS Account
+ Create Admin User
+ Create 2 key pairs
+ 
+ generate pub key for the 2nd Jenkins user key
+ ssh-keygen -y -f 
+ 
+ sudo useradd jenkins
+ 
+ sudo su - new_user
+ 
+ 
+ mkdir .ssh
+ chmod 700 .ssh
+ touch .ssh/authorized_keys
+ chmod 600 .ssh/authorized_keys
+ 
+ cat >> .ssh/authorized_keys
+ 
+ 
+ login with jenkins
+ 
+ sudo yum install -y yum-utils
+ sudo yum-config-manager \
+    --add-repo \
+    https://download.docker.com/linux/centos/docker-ce.repo
+	
+ sudo yum install docker-ce docker-ce-cli containerd.io
+ 
+ sudo systemctl start docker
+ 
+ sudo systemctl enable docker
+ sudo usermod -aG docker jenkins
+ 
+ logout and login
+ 
+ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+ 
+ sudo chmod +x /usr/local/bin/docker-compose
+ 
+ docker pull jenkins/jenkins
+ 
+ mkdir jenkins-data
+ cd jenkins-data
+ mkdir jenkins_home
+ 
+ docker compose yml file
+ id
+ sudo chown 1001:1001 jenkins_home -R
+ docker-compose up -d
+ sudo chmod 666 /var/run/docker.sock
+
+ https://faun.pub/how-to-install-docker-in-jenkins-container-4c49ba40b373
+ https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04

@@ -96,3 +96,54 @@
     - Host Key Verification Strategy: Non verifying Verification Strategy
     - Availability: keep this agent online as much as possible
     - Save
+
+# Steps to setup Jenkins on Docker
+ - Execute below commands
+ ```
+ mkdir jenkins-data
+ cd jenkins-data
+ mkdir jenkins_home
+ ```
+ - Create docker-compose.yml [docker-compose.yml](https://github.com/girikprabhakar/Jenkins_AWS/blob/AWS/docker-compose.yml)
+ ```
+ version: '3'
+ services:
+  jenkins:
+    container_name: jenkins
+    image: jenkins/jenkins
+    privileged: true
+    ports:
+      - 8080:8080
+    volumes:
+      - $PWD/jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - net
+ networks:
+   net:
+ ```
+ - Execute 
+ ``` 
+ docker-compose up -d 
+ ```
+ - Run an interactive shell on the Jenkins container that has been created, so we can install docker inside of this Jenkins container. In order to do that, we perform the following commands:
+ ```
+ docker exec -it --user root jenkins bash
+ curl https://get.docker.com/ > dockerinstall && chmod 777 dockerinstall && ./dockerinstall
+ ```
+ - Exit out of the Jenkins container interactive shell, and run the following command to change permissions on “docker.sock” for added security.
+ ``` 
+ sudo chmod 666 /var/run/docker.sock
+ ```
+ - Install Docker Composer
+    - To make sure you obtain the most updated stable version of Docker Compose, you’ll download this software from its official Github repository. 
+    ```
+    sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+    ```
+
+ - Extra Commands 
+ ```
+ id
+ sudo chown 1001:1001 jenkins_home -R
+ ```
